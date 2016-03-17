@@ -49,8 +49,32 @@ function processHtml(html) {
         font.text(' ' + font.text());
         font.attr('style', 'font-size: 0.6em;');
     });
-    $('table.main tr td a').each((i, a) => $(a).attr('style', 'text-decoration: underline;'));
+    const pHtml = '<p style="margin: 0;"></p>';
+    $('table.main tr td a').each((i, a) => {
+        a = $(a);
+        a.attr('style', 'text-decoration: underline;');
+        a.prev('br').remove();
+        a.before(pHtml);
+        var href = a.attr('href');
+        a.attr('href', 'http://www.netivot-shalom.org.il/' + href);
+        const p = a.prev('p');
+        var font = $(a.next('font'));
+        a.remove();
+        p.append(a);
+        if(font && font.length) {
+            font.remove();
+            p.append(font);
+        }
+    });
 
+    $('table.main tr td b').each((i, b) => {
+        b = $(b);
+        b.attr('style', 'background-color:antiquewhite; padding-left: 5px;');
+        b.before(pHtml);
+        const p = b.prev('p');
+        b.remove();
+        p.append(b);
+    });
     const htmlBuffer = iconvLite.encode($('font:has(table)').html().replace(/<!--[\s\S]*?-->/g, ''), 'iso-8859-8');
     fs.writeFileSync('out.html', htmlBuffer);
 }
@@ -74,38 +98,9 @@ function processHtml(html) {
             on('end', () => {
                 console.log('download done. Parsing...');
                 const htmlFromFile = iconvLite.decode(htmlBuffer, 'iso-8859-8');
-        processHtml(htmlFromFile);
+                processHtml(htmlFromFile);
                 console.log('done');
             });
         });
     }
 })();
-
-//function loadXMLDoc(filePath) {
-//    var xml2js = require('xml2js');
-//    var json;
-//    try {
-//        var fileData = fs.readFileSync(filePath, 'utf-8');
-//
-//        var parser = new xml2js.Parser();
-//        var funcResult;
-//        parser.parseString(fileData.substring(0, fileData.length), function (err, result) {
-//            if(err) {
-//                console.log("Error in parsing: ", err);
-//                throw err;
-//            }
-//            funcResult = result;
-//        });
-//
-//        return funcResult;
-//    } catch (ex) {console.log("Exception: ", ex)}
-//}
-//
-//function buildTD(td) {
-//    if(!td || !td.B || !td.B[0]) { return '';}
-//    var h = '<li>' + reverse(td.B[0]);
-//    td.A.forEach(A => {
-//        //h += '<br><a href="' + A.$.HREF + '">' + reverse(A._) + '</a>';
-//    })
-//    return h + '</li>';
-//}
