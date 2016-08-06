@@ -47,14 +47,18 @@ def process_parsha(page_name, year, special):
     if ' ' in year:
         return  # this is the "current parsha" link in the header - ignore
 
+    filename = '%s\%s-%s' % (parsha_dir, page_name, get_heb_year(year))
+    if special:
+        filename += '-' + special.replace('"', '').decode('Cp1255')[::-1]
+    filename += '.html'
+    if os.path.exists(filename):
+        print 'skipping %s... (already downloaded)' % page_name
+        return
+
     print 'getting %s...' % page_name
     page_content = requests.get('http://www.netivot-shalom.org.il/parshheb/%s.php' % page_name).content
     page_content = cleanup_page(page_content)
-    filename = '%s\%s-%s' % (parsha_dir, page_name, get_heb_year(year))
-    if special:
-        filename += '-' + special.decode('Cp1255')[::-1]
-    filename += '.html'
-    print 'writing %s...' % filename
+    print '- writing %s...' % filename
     with open(filename, 'w') as page_file:
         page_file.write(page_content)
 
