@@ -52,7 +52,7 @@ def process_parsha(page_name, year, special):
     page_content = cleanup_page(page_content)
     filename = '%s\%s-%s' % (parsha_dir, page_name, get_heb_year(year))
     if special:
-        filename += '-' + special
+        filename += '-' + special.decode('Cp1255')[::-1]
     filename += '.html'
     print 'writing %s...' % filename
     with open(filename, 'w') as page_file:
@@ -78,6 +78,7 @@ def process_page(page):
 def main():
     page = get_page()
     process_page(page)
+
 
 if __name__ == '__main__':
     main()
