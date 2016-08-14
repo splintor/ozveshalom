@@ -3,20 +3,19 @@ import re
 import sys
 import requests
 
-
 english = True
 
 parsha_dir = 'parsha-eng' if english else 'parsha'
-filename = 'eparsha' if english else 'parsha'
+main_filename = 'eparsha' if english else 'parsha'
 
 
 def get_page():
     if len(sys.argv) > 1 and sys.argv[1] == 'local':
-        print 'using local %s.html...' % filename
-        with open('%s.html' % filename, 'r') as page_file:
+        print 'using local %s.html...' % main_filename
+        with open('%s.html' % main_filename, 'r') as page_file:
             return page_file.read()
 
-    url = 'http://www.netivot-shalom.org.il/%s.php' % filename
+    url = 'http://www.netivot-shalom.org.il/%s.php' % main_filename
     print 'downloading %s...' % url
     content = requests.get(url).content
     with open('%s.html' % filename, 'w') as page_file:
@@ -57,7 +56,8 @@ def process_parsha(page_name, year, special):
         return  # this is the "current parsha" link in the header - ignore
 
     if english:
-       filename = '%s\%s' % (parsha_dir, page_name)
+        page_name = page_name.replace('\xf7', 'e')  # fix problem with link for teruma5762.php
+        filename = '%s\%s' % (parsha_dir, page_name)
     else:
         filename = '%s\%s-%s' % (parsha_dir, page_name, get_heb_year(year))
         if special:
