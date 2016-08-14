@@ -4,9 +4,13 @@ import sys
 import requests
 
 english = True
+english_articles = True
 
 parsha_dir = 'parsha-eng' if english else 'parsha'
 main_filename = 'eparsha' if english else 'parsha'
+if english_articles:
+    main_filename = 'articles'
+    parsha_dir = 'articles'
 
 
 def get_page():
@@ -18,7 +22,7 @@ def get_page():
     url = 'http://www.netivot-shalom.org.il/%s.php' % main_filename
     print 'downloading %s...' % url
     content = requests.get(url).content
-    with open('%s.html' % filename, 'w') as page_file:
+    with open('%s.html' % main_filename, 'w') as page_file:
         page_file.write(content)
     return content
 
@@ -51,9 +55,13 @@ def get_heb_year(year):
 
 
 def process_parsha(page_name, year, special):
-    print 'processing ' + page_name
     if ' ' in year:
         return  # this is the "current parsha" link in the header - ignore
+
+    if year == '':
+        return  # link to root directory
+
+    print 'processing %s...' % page_name
 
     if english:
         page_name = page_name.replace('\xf7', 'e')  # fix problem with link for teruma5762.php
@@ -68,7 +76,7 @@ def process_parsha(page_name, year, special):
         return
 
     print 'getting %s...' % page_name
-    pathname = 'parshaeng' if english else 'parshheb'
+    pathname = year if english else 'parshheb'
     page_content = requests.get('http://www.netivot-shalom.org.il/%s/%s.php' % (pathname, page_name)).content
     page_content = cleanup_page(page_content)
     print '- writing %s...' % filename
@@ -89,9 +97,10 @@ def process_page(page):
         os.makedirs(parsha_dir)
 
     if english:
-        for m in re.findall('<a href="parshaeng/([^.]*).php">', page, flags=re.IGNORECASE):
-            process_parsha(m, '', '')
-        process_parsha('bereishit5761', '', '')  # broken link
+        for m in re.findall('<a href="([^/.>]*)/([^./]*).php">', page, flags=re.IGNORECASE):
+            process_parsha(m[1], m[0], '')
+        if not english_articles:
+            process_parsha('bereishit5761', '', '')  # broken link
     else:
         for m in re.findall('(<FONT SIZE="1">([^<]*)</FONT>)*\W*<A HREF="parshheb/([^.]+)\.php">([^<]*)</A>', page):
             process_parsha(m[2], m[3], m[1])
