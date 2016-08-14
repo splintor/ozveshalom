@@ -4,13 +4,24 @@ import sys
 import requests
 
 
+english = True
+
+parsha_dir = 'parsha-eng' if english else 'parsha'
+filename = 'eparsha' if english else 'parsha'
+
+
 def get_page():
     if len(sys.argv) > 1 and sys.argv[1] == 'local':
-        print 'using local parsha.html...'
-        with open('parsha.html', 'r') as page_file:
+        print 'using local %s.html...' % filename
+        with open('%s.html' % filename, 'r') as page_file:
             return page_file.read()
 
-    return requests.get('http://www.netivot-shalom.org.il/parsha.php').content
+    url = 'http://www.netivot-shalom.org.il/%s.php' % filename
+    print 'downloading %s...' % url
+    content = requests.get(url).content
+    with open('%s.html' % filename, 'w') as page_file:
+        page_file.write(content)
+    return content
 
 
 years = {
@@ -40,23 +51,25 @@ def get_heb_year(year):
     return years[year]
 
 
-parsha_dir = 'parsha'
-
-
 def process_parsha(page_name, year, special):
+    print 'processing ' + page_name
     if ' ' in year:
         return  # this is the "current parsha" link in the header - ignore
 
-    filename = '%s\%s-%s' % (parsha_dir, page_name, get_heb_year(year))
-    if special:
-        filename += '-' + special.replace('"', '').decode('Cp1255')[::-1]
+    if english:
+       filename = '%s\%s' % (parsha_dir, page_name)
+    else:
+        filename = '%s\%s-%s' % (parsha_dir, page_name, get_heb_year(year))
+        if special:
+            filename += '-' + special.replace('"', '').decode('Cp1255')[::-1]
     filename += '.html'
     if os.path.exists(filename):
         print 'skipping %s... (already downloaded)' % page_name
         return
 
     print 'getting %s...' % page_name
-    page_content = requests.get('http://www.netivot-shalom.org.il/parshheb/%s.php' % page_name).content
+    pathname = 'parshaeng' if english else 'parshheb'
+    page_content = requests.get('http://www.netivot-shalom.org.il/%s/%s.php' % (pathname, page_name)).content
     page_content = cleanup_page(page_content)
     print '- writing %s...' % filename
     with open(filename, 'w') as page_file:
@@ -75,8 +88,13 @@ def process_page(page):
     if not os.path.exists(parsha_dir):
         os.makedirs(parsha_dir)
 
-    for m in re.findall('(<FONT SIZE="1">([^<]*)</FONT>)*\W*<A HREF="parshheb/([^.]+)\.php">([^<]*)</A>', page):
-        process_parsha(m[2], m[3], m[1])
+    if english:
+        for m in re.findall('<a href="parshaeng/([^.]*).php">', page, flags=re.IGNORECASE):
+            process_parsha(m, '', '')
+        process_parsha('bereishit5761', '', '')  # broken link
+    else:
+        for m in re.findall('(<FONT SIZE="1">([^<]*)</FONT>)*\W*<A HREF="parshheb/([^.]+)\.php">([^<]*)</A>', page):
+            process_parsha(m[2], m[3], m[1])
 
 
 def main():
