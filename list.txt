@@ -1,0 +1,72 @@
+בראשית	Bereshit	bereishit	bereisht
+נח	Noach	noah
+לך לך	Lech-Lecha	lechlecha	leikhlekha	lekhlekha	lechlcha
+וירא	Vayeira	vayera	vayeirah
+חיי שרה	Chayei Sarah	chaye	chayaehsara	chayei	chayesara	chayesarah	hayehsara	hayeiysarah	hayesara	hayeysara	hayeysarah	hayyeiy
+תולדות	Toledot	תולדת	toldot	toledoth
+ויצא	Vayetze	vayetse	vayeitze	vayetzei	vayetzeh
+וישלח	Vayishlach	vayishlah	vayislach
+וישב	Vayeshev	vayeishev
+מקץ	Miketz
+ויגש	Vayigash
+ויחי	Vayechi	vayakhe	vayehi	vahechi
+שמות	Shemot	shmot
+וארא	Va'eira	vaera
+בא	Bo
+בשלח	Beshalach	beshalah	beshalch
+יתרו	Yitro
+משפטים	Mishpatim
+תרומה	Terumah	teruma	truma
+תצוה	Tetzaveh	tetzave	tetsave	tetsaveh
+כי תשא	Ki Tisa	kitisa	kitisaa	kitissa	ki-tissa
+ויקהל	Vayakhel
+פקודי	Pekudei	pekuday	pekudey
+ויקרא	Vayikra	vayikra
+צו	Tzav	tsav
+שמיני	Shemini	shmini
+תזריע	Tazria	tazriya
+מצורע	Metzora	מצרע	metsora
+אחרי מות	Acharei Mot	acharei	acharey	aharei
+קדושים	Kedoshim	קדשים
+אמור	Emor	אמר
+בהר	Behar
+בחוקתי	Bechukotai	בחקתי	בחוקותי	behukotai	behukotay
+במדבר	Bamidbar	bemidbar
+נשא	Naso	nasso
+בהעלותך	Behaalotecha	בהעלתך	behaalotcha	behaalotha	behaalotkha	behahalotkha
+שלח	Shlach	shlah	shelah	shelach
+קרח	Korach	korah
+חקת	Chukat	חוקת	chukkat	hukkat	hukat
+בלק	Balak	balack
+פנחס	Pinchas	פינחס	pinhas
+מטות	Matot
+מסעי	Masei	massae	masaei	massei
+דברים	Devarim
+ואתחנן	Va'etchanan	vaethanan	vaetchan	vaetchanan	vaethchanan
+עקב	Eikev	ekev
+ראה	Re'eh	reeh	ree
+שופטים	Shoftim	שפטים	shoftime
+כי תצא	Ki Teitzei	kitetze	kitetseh	kitetse
+כי תבוא	Ki Tavo	כי תבא	kitavo
+נצבים	Nitzavim	ניצבים	netzavim	nitsavim
+וילך	Vayelech	vayeleh
+האזינו	Haazinu
+וזאת הברכה	V'Zot HaBerachah	vezot
+
+ראש השנה	Rosh Hashana	holiday	הנשה שאר א"סשת	ס"שת הנשה שאר	rosh	roshashana	roshhashanah
+שובה	Shuva	holiday
+יום כיפור	Yom Kippur	holiday	kippur	yomkippur	kipur
+שמחת תורה	Simhat Torah	שימחת תורה	holiday	א"סשת הרות תחמש	simchat	simhattorah	simhat	simchattorah
+סוכות	Sukkot	holiday	תוכוסה גח	תוכוס דעומה לוח	א"סשת תוכוס
+פסח	Pessach	חספ	holiday	שבת פסח	חספ ט"נשת	pesach
+שביעי של פסח	Shvii Shel Pessach		holiday	shvii	shvi-pesach	shvi-pesach
+ל"ג בעומר	Lag Baomer	holiday
+שבועות	Shavuot	holiday
+
+אחרי מות קדושים	Acharei Mot Kedoshim	joined	אחרי מות קדשים	אחרי קדשים
+בהר בחקתי	Behar Bechukotai	joined	בהר בחוקתי	בהר בחוקותי
+תזריע מצרע	Tazria Metzora	תזריע מצורע
+ויקהל פקודי	Vayakhel Pekudei	joined
+מטות מסעי	Matot Masei	joined	matot-massay
+נצבים וילך	Nitzavim Vayelech	ניצבים וילך	joined
+
