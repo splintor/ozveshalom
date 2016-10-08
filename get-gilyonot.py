@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 import os
 import re
 import sys
 import requests
 
-english = True
-english_articles = True
+english = False
+english_articles = False
 
 parsha_dir = 'parsha-eng' if english else 'parsha'
 main_filename = 'eparsha' if english else 'parsha'
@@ -30,6 +31,7 @@ def get_page():
 years = {
     '\xe7"\xf0\xf9\xfa': 5758,
     '\xe8"\xf0\xf9\xfa': 5759,
+    '\xf1"\xf0\xf9\xfa': 5760, # שלח-לך
     '\xf1"\xf9\xfa': 5760,
     '\xe0"\xf1\xf9\xfa': 5761,
     '\xe1"\xf1\xf9\xfa': 5762,
@@ -102,7 +104,7 @@ def process_page(page):
         if not english_articles:
             process_parsha('bereishit5761', '', '')  # broken link
     else:
-        for m in re.findall('(<FONT SIZE="1">([^<]*)</FONT>)*\W*<A HREF="parshheb/([^.]+)\.php">([^<]*)</A>', page):
+        for m in re.findall('(<FONT SIZE="1">([^<]*)</FONT>)*\W*<A HREF="parshheb/([^.]+)\.php">([^<]*)</A>', page, re.IGNORECASE):
             process_parsha(m[2], m[3], m[1])
 
 
