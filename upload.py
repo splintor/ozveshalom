@@ -52,11 +52,9 @@ def read_heb_file(f):
     t = o.read()
     m = re.search('<FONT SIZE="?\+4"? COLOR="navy">(.*)</FONT>', t, flags=re.UNICODE + re.IGNORECASE)
     n = re.search('<FONT SIZE="3" COLOR="navy">((\D*)\W*(\d+))\W*(.*)</FONT>', t, flags=re.UNICODE + re.IGNORECASE)
-    # if not m:
-    #     print f.encode('utf-8')
+    if not n:
+        print f.encode('utf-8')
 
-    # print m.group(1)
-    # print n.group(1)
     id = n.group(3)
     year = n.group(2) if ' ' in n.group(4) else n.group(4)
     # title = n.group(4) if ' ' in n.group(4) else n.group(2)
@@ -69,13 +67,15 @@ def read_heb_file(f):
     parsha = parsha.split(', ')[0]
     parsha_names = get_names(parsha)
     if not parsha_names:
-        print 'cannot find ', parsha, '\t\tfile: ', f
+        print 'Cannot find ', parsha.encode('utf-8'), '\t\tfile: ', f.encode('utf-8')
         exit(1)
     title = parsha.strip() + ' ' + year + u' (גליון מספר ' + id + ')'
     yearNum = years[year] if year in years else years[year[::-1]]
-    if 'rei2-5759' in f:
-        print 'DDD', f.encode('utf-8'), parsha.encode('utf-8'), parsha_names
-    return {'id': int(id), 'year': yearNum, 'title': title, 'page': t, 'lang': 'hebrew', 'file': f, 'names': parsha_names}
+    return {'id': int(id), 'year': yearNum, 'title': title, 'page': t, 'lang': 'hebrew', 'file': f, 'names': parsha_names, 'lower_names': [n.lower() for n in parsha_names]}
+
+
+def file_match(p, name, year):
+    return p['file'].lower().startswith(name.lower()) and year in p['file']
 
 
 def process_english_file(f):
@@ -89,26 +89,41 @@ def process_english_file(f):
         return 1
 
     name = p.group(1)
+    lower_name = name.lower()
     year = p.group(2)
     names = get_names(name)
     if not names:
-        print 'Parsha name not found: ', f
+        print 'Parsha name not found: ', f, name
         exit(1)
 
     found = False
+
     for p in plist:
-        if name in p['names']:
-            print name, p['file'].encode('utf-8'), p['names']
+        if file_match(p, name, year):
+            p['eng-file'] = f
+            found = True
+            break
+
+        if lower_name in p['lower_names']:
+            # print 'XXX', name, p['file'].encode('utf-8'), p['names'], year
             for n in p['names']:
-                if p['file'].startswith(n) and year in p['file']:
+                if file_match(p, n, year):
                     p['eng-file'] = f
-                    # print 'FOUND: ', f
                     found = True
                     break
 
+            if not found:
+                for n in p['names']:
+                    # print 'search: ', f, name, n.encode('utf-8')
+                    for p1 in plist:
+                        if file_match(p1, n, year):
+                            p1['eng-file'] = f
+                            found = True
+                            break
+
     if not found:
         print 'Heb file not found for: ', f
-        exit(1)
+        # exit(1)
         return 1
 
     return 0
