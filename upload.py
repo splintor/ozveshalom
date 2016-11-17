@@ -9,9 +9,9 @@ from sys import getfilesystemencoding
 import re
 import codecs
 from operator import itemgetter
-from datetime import date
+from datetime import date, timedelta
 
-# wp = Client('http://ozveshalom.org.il/blog/xmlrpc-copy.php', 'ozveshalom', 'ozveshalom1')
+wp = Client('http://ozveshalom.org.il/blog/xmlrpc-copy.php', 'ozveshalom', 'ozveshalom1')
 years = {
     u'תשנ"ח': 1998,
     u'תשנ"ח': 1998,
@@ -59,6 +59,9 @@ def read_heb_file(f):
     year = n.group(2) if ' ' in n.group(4) else n.group(4)
     # title = n.group(4) if ' ' in n.group(4) else n.group(2)
     year = year.replace('&quot;', '"').strip()
+    if year not in years:
+        year = year[::-1]
+    yearNum = years[year]
     parsha = m.group(1).strip()
     if u'תשרפ' in parsha:
         parsha = parsha[::-1]
@@ -70,8 +73,7 @@ def read_heb_file(f):
         print 'Cannot find ', parsha.encode('utf-8'), '\t\tfile: ', f.encode('utf-8')
         exit(1)
     title = parsha.strip() + ' ' + year + u' (גליון מספר ' + id + ')'
-    yearNum = years[year] if year in years else years[year[::-1]]
-    return {'id': int(id), 'year': yearNum, 'title': title, 'page': t, 'lang': 'hebrew', 'file': f, 'names': parsha_names, 'lower_names': [n.lower() for n in parsha_names]}
+    return {'id': int(id), 'year': yearNum, 'yearName': year, 'title': title, 'parsha': parsha, 'page': t, 'lang': 'עברית', 'file': f, 'names': parsha_names, 'lower_names': [n.lower() for n in parsha_names]}
 
 
 def file_match(p, name, year):
@@ -131,28 +133,37 @@ def process_english_file(f):
 # dir = u'parsha'
 heb_files = listdir(u'parsha')
 eng_files = listdir(u'parsha-eng')
+print 'Processing Hebrew files...'
 plist = [read_heb_file(f) for f in heb_files]
-counter = sum([process_english_file(f) for f in eng_files])
-print counter
-
-exit(counter)
+# counter = sum([process_english_file(f) for f in eng_files])
+# print counter
 
 plist.sort(key=itemgetter('id'))
 current_year = 0
 current_date = None
+print 'Uploading Hebrew files'
 for p in plist:
-    break
     post = WordPressPost()
     post.title = p['title']
     if p['year'] != current_year:
         current_year = p['year']
-        current_date = date(current_year, 1, 1)
+        current_date = datetime(current_year, 1, 1, 16, 0, 0, 0)
+        continue
+    else:
+        current_date = current_date + timedelta(days=5)
     post.content = p['page']
     post.post_status = 'publish'
     post.date = current_date
     post.date_modified  = current_date
+    post.terms_names = {
+        'post_tag': [p['yearName'], p['parsha']],
+        'category': ['גליונות שבת שלום'],
+    }
+    print 'posting ' + post.title
+    print current_date
     post.id = wp.call(NewPost(post))
     print post.id
+    break
 
 
 #todo:
