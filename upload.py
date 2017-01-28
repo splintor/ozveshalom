@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from wordpress_xmlrpc import Client, WordPressPost
-from wordpress_xmlrpc.methods.posts import GetPosts, NewPost
-from wordpress_xmlrpc.methods.users import GetUserInfo
 from os import listdir
 from os.path import join
-from sys import getfilesystemencoding
 import re
 import codecs
 from operator import itemgetter
-from datetime import date, timedelta
+from datetime import timedelta
 
 wp = Client('http://ozveshalom.org.il/blog/xmlrpc-copy.php', 'ozveshalom', 'ozveshalom1')
 years = {
-    u'תשנ"ח': 1998,
     u'תשנ"ח': 1998,
     u'תשנ"ט': 1999,
     u'תש"ס': 2000,
@@ -40,12 +36,13 @@ parsha_list = [l.strip().split('\t') for l in list_file.readlines()]
 
 
 def get_names(name):
-    return next((names for names in parsha_list if name.lower() in [w.lower() for w in names] or name[::-1].lower() in [w.lower() for w in names]), [])
+    return next((names for names in parsha_list if name.lower() in
+                 [w.lower() for w in names] or name[::-1].lower() in [w.lower() for w in names]), [])
 
 
 def read_heb_file(f):
-    p = join(u'parsha', f)
-    o = codecs.open(unicode(p), 'r', encoding='windows-1255')
+    name = join(u'parsha', f)
+    o = codecs.open(unicode(name), 'r', encoding='windows-1255')
     # o = open(unicode(p), 'r')
 
     # print f
@@ -55,13 +52,13 @@ def read_heb_file(f):
     if not n:
         print f.encode('utf-8')
 
-    id = n.group(3)
+    gilyon_num = n.group(3)
     year = n.group(2) if ' ' in n.group(4) else n.group(4)
     # title = n.group(4) if ' ' in n.group(4) else n.group(2)
     year = year.replace('&quot;', '"').strip()
     if year not in years:
         year = year[::-1]
-    yearNum = years[year]
+    year_num = years[year]
     parsha = m.group(1).strip()
     if u'תשרפ' in parsha:
         parsha = parsha[::-1]
@@ -72,27 +69,28 @@ def read_heb_file(f):
     if not parsha_names:
         print 'Cannot find ', parsha.encode('utf-8'), '\t\tfile: ', f.encode('utf-8')
         exit(1)
-    title = parsha.strip() + ' ' + year + u' (גליון מספר ' + id + ')'
-    return {'id': int(id), 'year': yearNum, 'yearName': year, 'title': title, 'parsha': parsha, 'page': t, 'lang': 'עברית', 'file': f, 'names': parsha_names, 'lower_names': [n.lower() for n in parsha_names]}
+    title = parsha.strip() + ' ' + year + u' (גליון מספר ' + gilyon_num + ')'
+    return {'id': int(gilyon_num), 'year': year_num, 'yearName': year, 'title': title, 'parsha': parsha, 'page': t,
+            'lang': 'עברית', 'file': f, 'names': parsha_names, 'lower_names': [n.lower() for n in parsha_names]}
 
 
-def file_match(p, name, year):
-    return p['file'].lower().startswith(name.lower()) and year in p['file']
+def file_match(prop, name, year):
+    return prop['file'].lower().startswith(name.lower()) and year in prop['file']
 
 
 def process_english_file(f):
-    p = join(u'parsha-eng', f)
-    o = codecs.open(unicode(p), 'r', encoding='windows-1255')
+    # name = join(u'parsha-eng', f)
+    # o = codecs.open(unicode(name), 'r', encoding='windows-1255')
     # o = open(unicode(p), 'r')
     # t = o.read()
-    p = re.match('([A-Za-z\-]*).*(57\d\d?)', f, flags=re.IGNORECASE)
-    if not p:
+    parts = re.match('([A-Za-z\-]*).*(57\d\d?)', f, flags=re.IGNORECASE)
+    if not parts:
         print 'File name does not match pattern <parsha><year>:', f
         return 1
 
-    name = p.group(1)
+    name = parts.group(1)
     lower_name = name.lower()
-    year = p.group(2)
+    year = parts.group(2)
     names = get_names(name)
     if not names:
         print 'Parsha name not found: ', f, name
@@ -100,22 +98,22 @@ def process_english_file(f):
 
     found = False
 
-    for p in plist:
-        if file_match(p, name, year):
-            p['eng-file'] = f
+    for item in plist:
+        if file_match(item, name, year):
+            item['eng-file'] = f
             found = True
             break
 
-        if lower_name in p['lower_names']:
+        if lower_name in item['lower_names']:
             # print 'XXX', name, p['file'].encode('utf-8'), p['names'], year
-            for n in p['names']:
-                if file_match(p, n, year):
-                    p['eng-file'] = f
+            for n in item['names']:
+                if file_match(item, n, year):
+                    item['eng-file'] = f
                     found = True
                     break
 
             if not found:
-                for n in p['names']:
+                for n in item['names']:
                     # print 'search: ', f, name, n.encode('utf-8')
                     for p1 in plist:
                         if file_match(p1, n, year):
@@ -130,11 +128,12 @@ def process_english_file(f):
 
     return 0
 
+
 # dir = u'parsha'
 heb_files = listdir(u'parsha')
 eng_files = listdir(u'parsha-eng')
 print 'Processing Hebrew files...'
-plist = [read_heb_file(f) for f in heb_files]
+plist = [read_heb_file(heb_file) for heb_file in heb_files]
 # counter = sum([process_english_file(f) for f in eng_files])
 # print counter
 
@@ -154,10 +153,10 @@ for p in plist:
     post.content = p['page']
     post.post_status = 'publish'
     post.date = current_date
-    post.date_modified  = current_date
+    post.date_modified = current_date
     post.terms_names = {
         'post_tag': [p['yearName'], p['parsha']],
-        'category': ['גליונות שבת שלום'],
+        'category': [u'גליונות שבת שלום'],
     }
     print 'posting ' + post.title
     print current_date
@@ -166,11 +165,11 @@ for p in plist:
     break
 
 
-#todo:
-    # handle English files that miss year
-    # find matching hebrew files for English files
-    # find the way to tag (Hebrew/English, Archive)
-    # upload...
+# todo:
+# handle English files that miss year
+# find matching hebrew files for English files
+# find the way to tag (Hebrew/English, Archive)
+# upload...
 
 # posts = wp.call(GetPosts())
 # print len(posts)
