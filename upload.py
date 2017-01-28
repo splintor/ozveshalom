@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from wordpress_xmlrpc import Client, WordPressPost
+from wordpress_xmlrpc.methods.posts import NewPost
 from os import listdir
-from os.path import join
+from os.path import join, isfile
 import re
 import codecs
 from operator import itemgetter
@@ -147,7 +148,7 @@ for p in plist:
     if p['year'] != current_year:
         current_year = p['year']
         current_date = datetime(current_year, 1, 1, 16, 0, 0, 0)
-        continue
+        # continue
     else:
         current_date = current_date + timedelta(days=5)
     post.content = p['page']
@@ -158,12 +159,14 @@ for p in plist:
         'post_tag': [p['yearName'], p['parsha']],
         'category': [u'גליונות שבת שלום'],
     }
+
+    filename = p['file']
+    if isfile(join(u'parsha', filename.replace('.htm', '-converted.htm'))):
+        continue
     print 'posting ' + post.title
     print current_date
     post.id = wp.call(NewPost(post))
     print post.id
-    break
-
 
 # todo:
 # handle English files that miss year
