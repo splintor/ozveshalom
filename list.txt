@@ -59,7 +59,7 @@
 שמחת תורה	Simhat Torah	שימחת תורה	holiday	א"סשת הרות תחמש	simchat	simhattorah	simhat	simchattorah
 סוכות	Sukkot	holiday	תוכוסה גח	תוכוס דעומה לוח	א"סשת תוכוס	sukot
 פסח	Pessach	חספ	holiday	שבת פסח	חספ ט"נשת	pesach	pessah
-שביעי של פסח	Shvii Shel Pessach		holiday	shvii	shvi-pesach	shvi-pesach
+שביעי של פסח	Shvii Shel Pessach	holiday	shvii	shvi-pesach	shvi-pesach  shvi
 ל"ג בעומר	Lag Baomer	holiday
 שבועות	Shavuot	holiday
 
