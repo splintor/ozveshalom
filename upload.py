@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+# NOTE: in order to run this in Console, you need to first run "chcp 862"
+
 from datetime import datetime
 from xmlrpclib import ProtocolError
 
