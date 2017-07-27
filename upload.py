@@ -8,7 +8,7 @@ from xmlrpclib import ProtocolError
 from wordpress_xmlrpc import Client, WordPressPost
 from wordpress_xmlrpc.methods.posts import NewPost
 from os import listdir
-from os.path import join, isfile
+from os.path import join  # , isfile
 import re
 import codecs
 from operator import itemgetter
@@ -62,7 +62,9 @@ def read_heb_file(heb_filename):
         exit(1)
 
     end = n.end()
-    data = data[:end] + u'<br><font size="2" color="blue">(<a href="../../../from-old-site/parsha/' + heb_filename + u'" id="redirectLink">קישור לדף המקורי</a>)</font>' + data[end:]
+    link_prefix = u'<br><font size="2" color="blue">(<a href="../../../from-old-site/parsha/'
+    link_suffix = u'" id="redirectLink">קישור לדף המקורי</a>)</font>'
+    data = data[:end] + link_prefix + heb_filename + link_suffix + data[end:]
 
     gilyon_num = n.group(3)
     year = n.group(2) if ' ' in n.group(4) else n.group(4)
@@ -174,7 +176,7 @@ def set_dates():
 
 def build_toc():
     html = u'<div class="widget_nav_menu parsha_cloud">'
-    starts = [u'בראשית',u'שמות', u'ויקרא', u'במדבר', u'דברים', u'ראש השנה']
+    starts = [u'בראשית', u'שמות', u'ויקרא', u'במדבר', u'דברים', u'ראש השנה']
 
     for names in parsha_list:
         item = names[0]
