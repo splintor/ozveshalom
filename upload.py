@@ -86,7 +86,7 @@ def file_match(prop, name, year):
 
 
 # noinspection SpellCheckingInspection
-file_to_debug = 'shvii'
+# file_to_debug = 'shvii'
 
 
 def process_english_file(eng_filename):
@@ -94,8 +94,8 @@ def process_english_file(eng_filename):
     # o = codecs.open(unicode(name), 'r', encoding='windows-1255')
     # o = open(unicode(p), 'r')
     # t = o.read()
-    if file_to_debug in eng_filename:
-        print 'DEBUG'
+    # if file_to_debug in eng_filename:
+    #     print 'DEBUG'
 
     parts = re.match('([A-Za-z\-]*).*(57\d\d?)', eng_filename, flags=re.IGNORECASE)
     if not parts:
@@ -194,11 +194,11 @@ if 'heb' in list_to_post:
         if isfile(join(u'parsha', filename.replace('.htm', '-converted.htm'))):
             continue
         print 'Posting ' + post.title
-        print p['date']
+        # print p['date']
         post.id = wp.call(NewPost(post))
         print 'id: ', post.id
 
-count = 0
+# count = 0
 files = []
 ids = []
 if 'eng' in list_to_post:
@@ -218,8 +218,8 @@ if 'eng' in list_to_post:
         if 'eng-file' not in p:
             continue
 
-        if file_to_debug in p['eng-file']:
-            print 'DEBUG 2'
+        # if file_to_debug in p['eng-file']:
+        #     print 'DEBUG 2'
 
         if isfile(join(u'parsha', p['file'].replace('.htm', '-converted.htm'))):
             continue
@@ -237,7 +237,7 @@ if 'eng' in list_to_post:
         parsha_eng = p['names'][1]
         post.title = parsha_eng + ' ' + year_heb_num + ' - Gilayon #' + unicode(p['id'])
         end_date = p['date'] + timedelta(days=1)
-        print 'Reading', p['eng-file']
+        # print 'Reading', p['eng-file']
         content = codecs.open(join('parsha-eng', p['eng-file']), 'r', encoding='windows-1255').read()
         content = alignJustifyPattern.sub('', content)
         post.content = content
@@ -251,7 +251,7 @@ if 'eng' in list_to_post:
 
         filename = p['eng-file']
         print 'Posting ' + post.title
-        print end_date
+        # print end_date
         try:
             post.id = wp.call(NewPost(post))
             print 'id: ', post.id
@@ -265,7 +265,7 @@ if 'eng' in list_to_post:
 # ids.sort()
 # f3 = open('./ids.txt', 'w+')
 # f3.write('\n'.join([unicode(id) for id in ids]))
-print 'count', count
+# print 'count', count
 
 # todo:
 # handle English files that miss year
