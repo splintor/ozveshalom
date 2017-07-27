@@ -47,6 +47,8 @@ def get_names(name):
 
 
 def read_heb_file(heb_filename):
+    if '-converted' in heb_filename:
+        return
     name = join('parsha', heb_filename)
     heb_file_obj = codecs.open(unicode(name), 'r', encoding='windows-1255')
     # o = open(unicode(p), 'r')
@@ -215,8 +217,8 @@ if 'heb' in list_to_post:
         }
 
         filename = p['file']
-        if isfile(join(u'parsha', filename.replace('.htm', '-converted.htm'))):
-            continue
+        # if isfile(join(u'parsha', filename.replace('.htm', '-converted.htm'))):
+        #     continue
         print 'Posting ' + post.title
         # print p['date']
         post.id = wp.call(NewPost(post))
@@ -245,8 +247,8 @@ if 'eng' in list_to_post:
         # if file_to_debug in p['eng-file']:
         #     print 'DEBUG 2'
 
-        if isfile(join(u'parsha', p['file'].replace('.htm', '-converted.htm'))):
-            continue
+        # if isfile(join(u'parsha', p['file'].replace('.htm', '-converted.htm'))):
+        #     continue
 
         # if '-converted' in p['file']:
         #     continue
