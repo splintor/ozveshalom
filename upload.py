@@ -59,6 +59,10 @@ def read_heb_file(heb_filename):
     n = re.search('<FONT SIZE="3" COLOR="navy">((\D*)\W*(\d+))\W*(.*)</FONT>', data, flags=re.UNICODE + re.IGNORECASE)
     if not n:
         print heb_filename.encode('utf-8')
+        exit(1)
+
+    end = n.end()
+    data = data[:end] + u'<br><font size="2" color="blue">(<a href="../../../from-old-site/parsha/' + heb_filename + u'" id="redirectLink">קישור לדף המקורי</a>)</font>' + data[end:]
 
     gilyon_num = n.group(3)
     year = n.group(2) if ' ' in n.group(4) else n.group(4)
