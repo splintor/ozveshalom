@@ -201,7 +201,7 @@ eng_files = listdir(u'parsha-eng')
 print 'Processing Hebrew files...'
 heb_list = filter(None, [read_heb_file(heb_file) for heb_file in heb_files])
 
-list_to_post = ['eng']
+list_to_post = ['heb', 'eng']
 heb_list.sort(key=itemgetter('id'))
 set_dates()
 # build_toc()
