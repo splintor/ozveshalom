@@ -216,7 +216,7 @@ if 'heb' in list_to_post:
         post.date = p['date']
         post.date_modified = p['date']
         post.terms_names = {
-            'post_tag': [p['yearName'], p['parsha']],
+            'post_tag': [p['yearName'], p['names'][0], u'הועבר מהאתר הישן'],
             'category': [u'גליונות שבת שלום'],
         }
 
@@ -275,7 +275,7 @@ if 'eng' in list_to_post:
         post.date = end_date
         post.date_modified = end_date
         post.terms_names = {
-            'post_tag': [p['yearName'], p['parsha'], parsha_eng, year_heb_num],
+            'post_tag': [p['yearName'], p['names'][0], parsha_eng, year_heb_num, u'הועבר מהאתר הישן'],
             'category': ['Shabat Shalom'],
         }
 
