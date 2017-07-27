@@ -199,7 +199,7 @@ def build_toc():
 heb_files = listdir(u'parsha')
 eng_files = listdir(u'parsha-eng')
 print 'Processing Hebrew files...'
-heb_list = [read_heb_file(heb_file) for heb_file in heb_files]
+heb_list = filter(None, [read_heb_file(heb_file) for heb_file in heb_files])
 
 list_to_post = ['eng']
 heb_list.sort(key=itemgetter('id'))
@@ -209,6 +209,8 @@ set_dates()
 if 'heb' in list_to_post:
     print 'Uploading Hebrew files'
     for p in heb_list:
+        if not p:
+            continue
         post = WordPressPost()
         post.title = p['title']
         post.content = p['page']
