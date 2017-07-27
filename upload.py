@@ -166,6 +166,29 @@ def set_dates():
         item['date'] = current_date
 
 
+def build_toc():
+    html = u'<div class="widget_nav_menu parsha_cloud">'
+    starts = [u'בראשית',u'שמות', u'ויקרא', u'במדבר', u'דברים', u'ראש השנה']
+
+    for names in parsha_list:
+        item = names[0]
+        if not item or u'joined' in names:
+            continue
+        p_tag = item.replace(' ', '-')
+        cls = ''
+        if item in starts:
+            cls = ' class="start"'
+            if item != starts[0]:
+                html += u'<br class="start">'
+
+        html += u'<li{0}><a href="http://ozveshalom.org.il/blog/tag/{1}">{2}</a></li>'.format(cls, p_tag, item)
+    html += u'</div>'
+
+    print 'Writing toc.html'
+    toc = open('toc.html', 'w')
+    toc.write(html.encode('utf8'))
+    toc.close()
+
 # dir = u'parsha'
 heb_files = listdir(u'parsha')
 eng_files = listdir(u'parsha-eng')
@@ -175,6 +198,7 @@ heb_list = [read_heb_file(heb_file) for heb_file in heb_files]
 list_to_post = ['eng']
 heb_list.sort(key=itemgetter('id'))
 set_dates()
+# build_toc()
 
 if 'heb' in list_to_post:
     print 'Uploading Hebrew files'
