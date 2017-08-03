@@ -251,20 +251,6 @@ if 'eng' in list_to_post:
         if 'eng-file' not in p:
             continue
 
-        # if file_to_debug in p['eng-file']:
-        #     print 'DEBUG 2'
-
-        # if isfile(join(u'parsha', p['file'].replace('.htm', '-converted.htm'))):
-        #     continue
-
-        # if '-converted' in p['file']:
-        #     continue
-
-        # count += 1
-        # files.append('// ' + p['eng-file'] + ' // ' + unicode(p['id']))
-        # ids.append(p['id'])
-        # continue
-
         post = WordPressPost()
         year_heb_num = unicode(p['year'] + 3760)
         parsha_eng = p['names'][1]
@@ -296,7 +282,6 @@ if 'eng' in list_to_post:
 
         filename = p['eng-file']
         print 'Posting ' + post.title
-        # print end_date
         try:
             post.id = wp.call(NewPost(post))
             print 'id: ', post.id
