@@ -237,7 +237,6 @@ files = []
 ids = []
 if 'eng' in list_to_post:
     print 'Uploading English files'
-    alignJustifyPattern = re.compile(' ALIGN="justify"', re.IGNORECASE)
 
     cc = []
     for eng_file in eng_files:
@@ -273,7 +272,19 @@ if 'eng' in list_to_post:
         end_date = p['date'] + timedelta(days=1)
         # print 'Reading', p['eng-file']
         content = codecs.open(join('parsha-eng', p['eng-file']), 'r', encoding='windows-1255').read()
-        content = alignJustifyPattern.sub('', content)
+
+        m = re.search('<body[^>]*>', content, flags=re.UNICODE + re.IGNORECASE)
+        if not m:
+            m = re.search('<p[^>]*>', content, flags=re.UNICODE + re.IGNORECASE)
+            if not m:
+                print 'Cannot find where to add original link in ' + p['eng-file']
+                exit(1)
+
+        end = m.end()
+        link_prefix = u'<br><font size="2" color="blue">(<a href="../../../from-old-site/parsha-eng/'
+        link_suffix = u'" id="redirectLink">link to original page</a>)</font>'
+        content = content[:end] + link_prefix + p['eng-file'] + link_suffix + content[end:]
+
         post.content = content
         post.post_status = 'publish'
         post.date = end_date
